@@ -6,7 +6,6 @@ import { TOKEN_KEY } from '@/constants/KEY'
 export function getToken() {
   return Cookies.get(TOKEN_KEY)
 }
-
 // 设置方法
 export function setToken(token) {
   return Cookies.set(TOKEN_KEY, token)

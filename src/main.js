@@ -7,7 +7,7 @@ import '@/styles/index.scss' // global css
 
 import App from './App'
 
-import store from './store'
+import store from './store/index'
 
 import router from './router'
 

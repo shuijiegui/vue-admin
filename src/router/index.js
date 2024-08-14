@@ -12,13 +12,14 @@ export const routes = [
     component: () => import('@/views/Login/index'),
     hidden: true
   },
+  // {
+  //   path: '/',
+  //   component: Layout,
+  //   redirect: '/workbench'
+  // },
   {
     path: '/',
-    component: Layout,
-    redirect: '/workbench'
-  },
-  {
-    path: '/workbench',
+    redirect: '/workbench',
     component: Layout,
     children: [
       {
