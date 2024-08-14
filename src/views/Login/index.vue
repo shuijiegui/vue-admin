@@ -15,7 +15,7 @@
           label="密码"
           prop="password"
         >
-          <el-input v-model="formData.password" placeholder="请输入密码" />
+          <el-input v-model="formData.password" placeholder="请输入密码" type="password" />
         </el-form-item>
 
         <el-form-item prop="remember">
@@ -71,13 +71,13 @@ export default {
           localStorage.setItem('remember_key', JSON.stringify({
             username: this.formData.username,
             password: this.formData.password
-
           }))
         } else {
           localStorage.removeItem('remember_key')
         }
         this.$message.success('登录成功')
-        this.$router.push('/')
+        const path = this.$route.query.redirect || '/'
+        this.$router.push(path)
       })
     }
   }
