@@ -11,6 +11,7 @@ import store from './store/index'
 
 import router from './router'
 
+import '@/permission' // 路由前置守卫
 // 注册svg
 import '@/icons'
 

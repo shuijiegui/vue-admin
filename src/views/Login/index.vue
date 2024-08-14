@@ -31,6 +31,8 @@
 </template>
 
 <script>
+import '@/constants/KEY'
+import { Remeber_key } from '@/constants/KEY'
 export default {
   name: 'Login',
   data() {
@@ -52,8 +54,9 @@ export default {
   },
   mounted() {
     // 判断本地缓存有无表单数据
-    const formData = JSON.parse(localStorage.getItem('remember_key'))
+    const formData = JSON.parse(localStorage.getItem(Remeber_key))
     if (formData) {
+      console.log('ttt')
       this.formData.username = formData.username
       this.formData.password = formData.password
       this.formData.remember = true
@@ -68,12 +71,12 @@ export default {
           password: this.formData.password
         })
         if (this.formData.remember) {
-          localStorage.setItem('remember_key', JSON.stringify({
+          localStorage.setItem(Remeber_key, JSON.stringify({
             username: this.formData.username,
             password: this.formData.password
           }))
         } else {
-          localStorage.removeItem('remember_key')
+          localStorage.removeItem(Remeber_key)
         }
         this.$message.success('登录成功')
         const path = this.$route.query.redirect || '/'

@@ -26,9 +26,24 @@
 export default {
   methods: {
     // 退出登录
-    logout() {
-      this.$store.commit('user/removeToken')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    async logout() {
+      await this.$confirm('确认要退出吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '退出成功!'
+        })
+        this.$store.commit('user/removeToken')
+        this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消退出'
+        })
+      })
     }
   }
 }
