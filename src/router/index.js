@@ -49,7 +49,10 @@ export const routes = [
       }
     ]
   },
-
+  {
+    path: '/cardAdd',
+    component: () => import('@/views/Car/CarCard/addCard')
+  },
   {
     path: '/parking',
     component: Layout,
@@ -68,6 +71,7 @@ export const routes = [
         component: () => import('@/views/Car/CarCard'),
         meta: { title: '月卡管理' }
       },
+
       {
         path: 'pay',
         permission: 'parking:payment',
