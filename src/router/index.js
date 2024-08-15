@@ -12,11 +12,6 @@ export const routes = [
     component: () => import('@/views/Login/index'),
     hidden: true
   },
-  // {
-  //   path: '/',
-  //   component: Layout,
-  //   redirect: '/workbench'
-  // },
   {
     path: '/',
     redirect: '/workbench',
@@ -53,6 +48,11 @@ export const routes = [
     path: '/cardAdd',
     component: () => import('@/views/Car/CarCard/addCard')
   },
+  {
+    path: '/enterPriseAdd',
+    component: () => import('@/views/Park/Enterprise/add')
+  },
+
   {
     path: '/parking',
     component: Layout,
