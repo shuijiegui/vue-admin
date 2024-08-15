@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { createCardAPI } from '@/api/card'
+import { createCardAPI, getCardDetailAPI, updateCardAPI } from '@/api/card'
 export default {
   data() {
     const validaeCarNumber = (rule, value, callback) => {
@@ -77,6 +77,7 @@ export default {
     }
     return {
       // 车辆信息表单
+      id: this.$route.query.id,
       carInfoForm: {
         personName: '', // 车主姓名
         phoneNumber: '', // 联系方式
@@ -154,9 +155,15 @@ export default {
       ]
     }
   },
+  mounted() {
+    // 通过路由传入的参数判断是新增还是编辑
+
+    if (this.id) {
+      this.getDetail()
+    }
+  },
   methods: {
     confirmAdd() {
-      console.log(this.$refs.carInfoForm.validate())
       this.$refs.carInfoForm.validate(async valid => {
         if (valid) {
           this.$refs.feeForm.validate(async valid => {
@@ -170,7 +177,14 @@ export default {
               }
               // 删掉多余字段
               delete payload.payTime
-              await createCardAPI(payload)
+              if (this.id) {
+                // 编辑--车牌换不了
+                await updateCardAPI(payload)
+                this.$message.success('编辑成功')
+              } else {
+                await createCardAPI(payload)
+                this.$message.success('新增成功')
+              }
               this.$router.back()
             }
           })
@@ -180,6 +194,24 @@ export default {
     resetForm() {
       this.$refs.feeForm.resetFields()
       this.$refs.carInfoForm.resetFields()
+    },
+    // 获取详情--编辑功能
+    async getDetail() {
+      const res = await getCardDetailAPI(this.id)
+      // 回填车辆信息表单
+      const { carInfoId, personName, phoneNumber, carNumber, carBrand } = res.data
+      this.carInfoForm = {
+        personName, phoneNumber, carNumber, carBrand, carInfoId
+      }
+
+      // 回填缴费信息表单
+      const { rechargeId, cardStartDate, cardEndDate, paymentAmount, paymentMethod } = res.data
+      this.feeForm = {
+        rechargeId,
+        paymentAmount,
+        paymentMethod,
+        payTime: [cardStartDate, cardEndDate]
+      }
     }
   }
 
