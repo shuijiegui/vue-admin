@@ -12,3 +12,14 @@ export function getRuleListAPI(params) {
     params
   })
 }
+/**
+ * 创建规则
+ * @returns
+ */
+export const createRuleAPI = (data) => {
+  return request({
+    url: '/parking/rule',
+    method: 'POST',
+    data
+  })
+}
