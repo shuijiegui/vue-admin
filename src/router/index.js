@@ -52,6 +52,10 @@ export const routes = [
     path: '/enterPriseAdd',
     component: () => import('@/views/Park/Enterprise/add')
   },
+  {
+    path: '/exterpriseDetail',
+    component: () => import('@/views/Park/Enterprise/Detail')
+  },
 
   {
     path: '/parking',

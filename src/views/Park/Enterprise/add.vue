@@ -114,6 +114,7 @@ export default {
           { required: true, message: '请上传营业执照', trigger: 'blur' }
         ]
       }
+
     }
   },
   mounted() {

@@ -1,7 +1,10 @@
 <template>
   <div class="add-card">
     <header class="add-header">
-      <el-page-header content="增加月卡" @back="$router.back()" />
+      <el-page-header
+        :content="id ? '编辑月卡' : '增加月卡'"
+        @back="$router.back()"
+      />
     </header>
     <main class="add-main">
       <div class="form-container">
@@ -34,6 +37,7 @@
                 range-separator="至"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
+                :picker-options="pickerOptions"
               />
             </el-form-item>
             <el-form-item label="支付金额" prop="paymentAmount">
@@ -77,7 +81,7 @@ export default {
     }
     return {
       // 车辆信息表单
-      id: this.$route.query.id,
+      id: this.$route.query.id || '',
       carInfoForm: {
         personName: '', // 车主姓名
         phoneNumber: '', // 联系方式
@@ -138,6 +142,7 @@ export default {
           }
         ]
       },
+
       // 支付方式列表
       payMethodList: [
         {
@@ -152,7 +157,13 @@ export default {
           id: 'Cash',
           name: '线下'
         }
-      ]
+      ],
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now()
+        }
+      }
+
     }
   },
   mounted() {

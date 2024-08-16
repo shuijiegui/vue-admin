@@ -1,4 +1,3 @@
-
 import request from '@/utils/request'
 
 /**
@@ -71,5 +70,64 @@ export const delExterpriseAPI = (id) => {
   return request({
     url: `/park/enterprise/${id}`,
     method: 'DELETE'
+  })
+}
+
+/**
+ * 获取楼宇列表
+ * @param {*} id
+ * @returns
+ */
+export const getRentBuildListAPI = () => {
+  return request({
+    url: '/park/rent/building'
+  })
+}
+
+/**
+ * 创建合同
+ * @param {*}
+ * @returns
+ */
+export const createRentAPI = (data) => {
+  return request({
+    url: '/park/enterprise/rent',
+    method: 'POST',
+    data
+  })
+}
+/**
+ * 获取合同列表
+ * @param {*} id
+ * @returns
+ */
+export const getRentListAPI = (id) => {
+  return request({
+    url: `/park/enterprise/rent/${id}`
+  })
+}
+
+/**
+ * 退租
+ * @param {合同id} rentId
+ * @returns
+ */
+export const outRentAPI = (rentId) => {
+  return request({
+    url: `/park/enterprise/rent/${rentId}`,
+    method: 'PUT'
+  })
+}
+
+/**
+ * 获取详情
+ * @param {企业id} id
+ * @returns
+ */
+
+export const getEnterpriseDetail = (id) => {
+  return request({
+    url: `/park/enterprise/${id}`,
+    method: 'GET'
   })
 }
