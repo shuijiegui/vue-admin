@@ -1,6 +1,34 @@
 <template>
   <div class="role-container">
-
+    <!-- left -->
+    <div class="left-wrapper">
+      <div
+        v-for="(item, index) in roleList"
+        :key="item.roleId"
+        class="role-item"
+        :class="{active: index === activeIndex}"
+        @click="changeRole(index)"
+      >
+        <div class="role-info">
+          <svg-icon :icon-class="index === activeIndex ? 'user-active' : 'user'" class="icon" />
+          {{ item.roleName }}
+        </div>
+        <div class="more">
+          <el-dropdown>
+            <span class="el-dropdown-link">
+              <svg-icon icon-class="more" />
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native="$router.push(`/roleAdd?id=${item.roleId}`)">编辑角色</el-dropdown-item>
+              <el-dropdown-item @click.native="delRole(item.roleId)">删除</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+      </div>
+      <el-button class="addBtn" size="mini" @click="$router.push('/roleAdd')">
+        添加角色
+      </el-button>
+    </div>
     <!-- right -->
     <div class="right-wrapper">
 
@@ -9,35 +37,7 @@
         <el-tab-pane label="功能权限" name="tree">
 
           <div class="tree-wrapper">
-            <!-- left -->
-            <div class="left-wrapper">
-              <div
-                v-for="(item, index) in roleList"
-                :key="item.roleId"
-                class="role-item"
-                :class="{active: index === activeIndex}"
-                @click="changeRole(index)"
-              >
-                <div class="role-info">
-                  <svg-icon :icon-class="index === activeIndex ? 'user-active' : 'user'" class="icon" />
-                  {{ item.roleName }}
-                </div>
-                <div class="more">
-                  <el-dropdown>
-                    <span class="el-dropdown-link">
-                      <svg-icon icon-class="more" />
-                    </span>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item @click.native="$router.push(`/roleAdd?id=${item.roleId}`)">编辑角色</el-dropdown-item>
-                      <el-dropdown-item @click.native="delRole(item.roleId)">删除</el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>
-                </div>
-              </div>
-              <el-button class="addBtn" size="mini" @click="$router.push('/roleAdd')">
-                添加角色
-              </el-button>
-            </div>
+
             <div v-for="item in treeList" :key="item.id" class="tree-item">
               <!-- title -->
               <div class="tree-title">{{ item.title }}</div>
@@ -167,11 +167,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
+*{
+padding: 0;
+margin: 0;
+}
 .role-container {
   display: flex;
   font-size: 14px;
   background-color: #fff;
-  padding:20px;
+
   .left-wrapper {
     width: 200px;
     border-right: 1px solid #e4e7ec;
@@ -208,6 +212,7 @@ export default {
     }
     .addBtn{
       width: 100%;
+      height: 30px;
       margin-top: 20px;
     }
   }

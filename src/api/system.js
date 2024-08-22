@@ -71,3 +71,15 @@ export const delRoleUserAPI = (roleId) => {
     method: 'DELETE'
   })
 }
+/**
+ * 删除角色
+ * @returns
+ */
+export const getUserListAPI = (data) => {
+  return request({
+    url: `/park/sys/user`,
+    params: data
+
+  })
+}
+
