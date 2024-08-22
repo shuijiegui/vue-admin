@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :visible="dialogVisible" width="680px" title="添加员工" @close="hCloseDialog">
+  <el-dialog :visible="dialogVisible" width="680px" :title="title" :close-on-click-modal="false" @close="hCloseDialog">
     <!-- 表单接口 -->
     <div class="form-container">
       <el-form ref="addForm" label-position="top" :model="form" :rules="formRules">
@@ -40,41 +40,53 @@
 </template>
 
 <script>
+import { EditRoleAPI, AddRoleAPI, RoleDetailAPI } from '@/api/role'
+import { getRoleListAPI } from '@/api/system'
 export default {
   name: 'AddEmployee',
   props: {
     dialogVisible: {
       type: Boolean,
       required: true
-    },
+    }
 
-    options: {
-      type: Array,
-      required: true
-    },
-    form: {
-      type: Object,
-      required: true
-    },
-    formRules: {
-      type: Object,
-      required: true
-    },
-    hAdd: {
-      type: Function,
-      required: true
-    },
-    hEdit: {
-      type: Function,
-      required: true
-    },
-   
   },
   data() {
     return {
+      title: '添加员工',
+      options: [],
+      form: {
+        phonenumber: '',
+        status: 1,
+        roleId: '',
+        userName: '',
+        name: '',
+        roleName: ''
+      },
+      formRules: {
+        phonenumber: [
+          { required: true, message: '请输入手机号', trigger: 'blur' },
+          {
+            pattern: /^1[34578]\d{9}$/,
+            message: '请输入正确的手机号',
+            trigger: 'blur'
+          }
+        ],
+        status: [{ required: true, message: '请选择状态', trigger: 'change' }],
+        roleId: [{ required: true, message: '请选择角色', trigger: 'change' }],
+        userName: [
+          { required: true, message: '请输入用户名', trigger: 'blur' }
+        ],
+        name: [{ required: true, message: '请输入登陆账号', trigger: 'blur' }],
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
+      }
 
     }
   },
+  mounted() {
+    this.getRoleList()
+  },
+
   methods: {
     async confirmAdd() {
       this.$refs.addForm.validate(async(valid) => {
@@ -82,22 +94,53 @@ export default {
           if (this.form.id) {
             console.log('编辑')
             await this.hEdit()
+            this.$message.success('编辑成功')
           } else {
             console.log('新增')
             await this.hAdd()
+            this.$message.success('新增成功')
           }
         } else {
           console.log('error submit!!')
           return false
         }
         this.hCloseDialog()
+        this.$emit('getUserList')
       })
     },
     async hCloseDialog() {
-      this.$refs.addForm.resetFields() // 同步操作
-      this.form.roleId = '' // 同步操作
-      delete this.form.id
       this.$emit('update:dialogVisible', false)
+      this.$refs.addForm.resetFields()
+      this.form.roleId = ''
+      delete this.form.id
+      console.log(this.dialogVisible)
+    },
+    async hAdd() {
+      await AddRoleAPI(this.form)
+      this.$emit('getUserList')
+    },
+    async hEdit() {
+      await EditRoleAPI(this.form)
+      this.$emit('getUserList')
+    },
+    async getRoleDetail(roleid) {
+      const res = await RoleDetailAPI(roleid)
+      console.log(res)
+      // 数据回填
+      const { phonenumber, status, roleId, userName, name, roleName, id } = res.data
+      this.form = {
+        phonenumber,
+        status,
+        roleId,
+        userName,
+        name,
+        roleName,
+        id
+      }
+    },
+    async getRoleList() {
+      const res = await getRoleListAPI()
+      this.options = res.data
     }
 
   }
