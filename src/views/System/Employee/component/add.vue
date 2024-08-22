@@ -67,8 +67,8 @@ export default {
     hEdit: {
       type: Function,
       required: true
-    },
-   
+    }
+
   },
   data() {
     return {
