@@ -25,8 +25,8 @@
         </el-form-item>
         <el-form-item label="员工状态" prop="status">
           <template>
-            <el-radio v-model="form.status" label="0">禁用</el-radio>
-            <el-radio v-model="form.status" label="1">启用</el-radio>
+            <el-radio v-model="form.status" :label="Number(0)">禁用</el-radio>
+            <el-radio v-model="form.status" :label="Number(1)">启用</el-radio>
           </template>
         </el-form-item>
 
@@ -63,8 +63,12 @@ export default {
     hAdd: {
       type: Function,
       required: true
-    }
-
+    },
+    hEdit: {
+      type: Function,
+      required: true
+    },
+   
   },
   data() {
     return {
@@ -75,18 +79,25 @@ export default {
     async confirmAdd() {
       this.$refs.addForm.validate(async(valid) => {
         if (valid) {
-          await this.hAdd(this.form) // 确保异步操作先执行
-          this.hCloseDialog()
+          if (this.form.id) {
+            console.log('编辑')
+            await this.hEdit()
+          } else {
+            console.log('新增')
+            await this.hAdd()
+          }
         } else {
           console.log('error submit!!')
           return false
         }
+        this.hCloseDialog()
       })
     },
     async hCloseDialog() {
-      this.$emit('update:dialogVisible', false)
       this.$refs.addForm.resetFields() // 同步操作
       this.form.roleId = '' // 同步操作
+      delete this.form.id
+      this.$emit('update:dialogVisible', false)
     }
 
   }
