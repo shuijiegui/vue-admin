@@ -60,7 +60,10 @@ export const routes = [
     path: '/roleAdd',
     component: () => import('@/views/System/Role/addRole')
   },
-
+  {
+    path: '/detail',
+    component: () => import('@/views/Rod/RodWarn/detail')
+  },
   {
     path: '/parking',
     component: Layout,
