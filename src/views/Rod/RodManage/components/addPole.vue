@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import { getAreaListAPI, addPoleAPI, editPoleAPI, getPoleListAPI } from '@/api/rod'
 export default {
   name: 'AddRod',
   props: {
@@ -53,39 +54,47 @@ export default {
       type: Boolean,
       required: true
     },
-
-    form: {
+    params: {
       type: Object,
       required: true
-    },
-    formRules: {
-      type: Object,
-      required: true
-    },
-    areaNameOptions: {
-      type: Array,
-      required: true
-    },
-    poleTypeOptions: {
-      type: Array,
-      required: true
-    },
-    hAdd: {
-      type: Function,
-      required: true
 
-    },
-
-    hEdit: {
-      type: Function,
-      required: true
     }
 
   },
   data() {
     return {
+      form: {
+        poleName: '',
+        poleNumber: '',
+        poleIp: '',
+        areaId: '',
+        poleType: ''
+      },
+      formRules: {
+        poleName: [
+          { required: true, message: '请输入议题杆名称', trigger: 'blur' }
+        ],
+        poleNumber: [
+          { required: true, message: '请输入一体杆编号', trigger: 'blur' }
+        ],
+        poleIp: [
+          { required: true, message: '请输入一体杆IP', trigger: 'blur' }
+        ],
+        areaName: [
+          { required: true, message: '请输入安装区域', trigger: 'blur' }
+        ],
+        poleType: [
+          { required: true, message: '请输入一体杆类型', trigger: 'blur' }
+        ]
+
+      },
+      areaNameOptions: [],
+      poleTypeOptions: []
 
     }
+  },
+  mounted() {
+    this.getAreaList()
   },
   created() {
   },
@@ -112,10 +121,35 @@ export default {
       })
     },
     async hCloseDialog() {
-      console.log(this.$refs.addForm)
+      this.$refs.addForm.resetFields()
+      this.$emit('resetpoleName')
       delete this.form.id
       this.$emit('update:dialogVisible', false)
-      console.log(2)
+    },
+    async getAreaList() {
+      const res = await getAreaListAPI()
+      this.areaNameOptions = res.data
+    },
+    async hAdd() {
+      await addPoleAPI(this.form)
+      this.$emit('getPoleList')
+    },
+    async edit(rodId) {
+      this.$emit('changePoleName', rodId)
+      const res = await getPoleListAPI(this.params)
+      const { areaId, poleNumber, poleIp, poleType, id, poleName } = res.data.rows.find(item => item.id === rodId)
+      this.form = {
+        poleName,
+        poleNumber,
+        poleIp,
+        areaId,
+        poleType,
+        id
+      }
+    },
+    async hEdit() {
+      await editPoleAPI(this.form)
+      this.$emit('getPoleList')
     }
 
   }

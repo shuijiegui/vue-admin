@@ -47,4 +47,16 @@ export const editPoleAPI = (data) => {
     data
   })
 }
+/**
+ *
+ * 批量删除一体杆
+ * /pole/info/list
+ */
+export const delPoleAPI = (...ids) => {
+  return request({
+    url: `/pole/info/${ids}`,
+    method: 'delete'
+
+  })
+}
 

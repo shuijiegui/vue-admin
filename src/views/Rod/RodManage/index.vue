@@ -34,20 +34,18 @@
 
       <el-table-column label="操作" width="180">
         <template #default="{row}">
-          <el-button size="mini" type="text" @click="edit(row.poleName)">编辑</el-button>
-          <el-button size="mini" type="text">删除</el-button>
+          <el-button size="mini" type="text" @click="edit(row.id)">编辑</el-button>
+          <el-button size="mini" type="text" @click="del(row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <!-- // 增加一体杆弹窗 -->
     <add-pole-dialog
+      ref="addPoleDialog"
       :dialog-visible.sync="dialogVisible"
-      :form.sync="form"
-      :form-rules.sync="formRules"
-      :area-name-options.sync="areaNameOptions"
-      :pole-type-options.sync="poleTypeOptions"
-      :h-add="hAdd"
-      :h-edit="hEdit"
+      :params.sync="params"
+      @resetpoleName="resetpoleName"
+      @changePoleName="changePoleName"
     />
 
     <div class="page-container">
@@ -62,7 +60,7 @@
 </template>
 
 <script>
-import { getPoleListAPI, getAreaListAPI, addPoleAPI, editPoleAPI } from '@/api/rod'
+import { getPoleListAPI, delPoleAPI } from '@/api/rod'
 import addPoleDialog from './components/addPole.vue'
 export default {
   name: 'RodManage',
@@ -74,52 +72,22 @@ export default {
       params: {
         page: 1,
         pageSize: 8,
-        poleName: '' // 增加字段name
+        id: '' // 增加字段name
       },
-      total: 0,
       poleList: [],
+      total: 0,
       dialogVisible: false,
-      search: '',
-      form: {
-        poleName: '',
-        poleNumber: '',
-        poleIp: '',
-        areaId: '',
-        poleType: ''
-      },
-      formRules: {
-        poleName: [
-          { required: true, message: '请输入议题杆名称', trigger: 'blur' }
-        ],
-        poleNumber: [
-          { required: true, message: '请输入一体杆编号', trigger: 'blur' }
-        ],
-        poleIp: [
-          { required: true, message: '请输入一体杆IP', trigger: 'blur' }
-        ],
-        areaName: [
-          { required: true, message: '请输入安装区域', trigger: 'blur' }
-        ],
-        poleType: [
-          { required: true, message: '请输入一体杆类型', trigger: 'blur' }
-        ]
+      search: ''
 
-      },
-      areaNameOptions: [],
-      poleTypeOptions: []
     }
   },
-  created() {
 
-  },
   mounted() {
     this.getPoleList()
-    this.getAreaList()
   },
   methods: {
     doSearch() {
       this.params.page = 1
-      this.params.poleName = this.search
       this.getPoleList()
     },
     hShow() {
@@ -130,6 +98,7 @@ export default {
     },
     async getPoleList() {
       const res = await getPoleListAPI(this.params)
+      console.log(res)
       this.poleList = res.data.rows
       this.total = res.data.total
     },
@@ -151,36 +120,37 @@ export default {
       this.params.page = page
       this.getPoleList()
     },
-    async getAreaList() {
-      const res = await getAreaListAPI()
-      this.areaNameOptions = res.data
+    edit(id) {
+      console.log(id)
+      this.$refs.addPoleDialog.edit(id)
+      this.dialogVisible = true
     },
-    async hAdd() {
-      await addPoleAPI(this.form)
+    resetpoleName() {
+      this.params.id = ''
+    },
+    changePoleName(id) {
+      this.params.id = id
+    },
+    del(id) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async() => {
+        await delPoleAPI(id)
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
       this.getPoleList()
-    },
-    async edit(poleNameInfo) {
-      this.params.poleName = poleNameInfo
-      const res = await getPoleListAPI(this.params)
-      console.log(res)
-      const { areaId, poleNumber, poleIp, poleType, id, poleName } = res.data.rows[0]
-      this.form = {
-        poleName,
-        poleNumber,
-        poleIp,
-        areaId,
-        poleType,
-
-        id
-      }
-      this.hShow()
-    },
-    async hEdit() {
-      await editPoleAPI(this.form)
-      this.params.poleName = ''
-      this.getPoleList()
-      console.log(1)
     }
+
   }
 }
 </script>
