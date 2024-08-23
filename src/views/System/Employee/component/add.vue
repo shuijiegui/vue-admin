@@ -50,30 +50,6 @@ export default {
       required: true
     }
 
-<<<<<<< HEAD
-    options: {
-      type: Array,
-      required: true
-    },
-    form: {
-      type: Object,
-      required: true
-    },
-    formRules: {
-      type: Object,
-      required: true
-    },
-    hAdd: {
-      type: Function,
-      required: true
-    },
-    hEdit: {
-      type: Function,
-      required: true
-    }
-
-=======
->>>>>>> role
   },
   data() {
     return {
