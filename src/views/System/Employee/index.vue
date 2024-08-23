@@ -33,7 +33,7 @@
           <el-button
             size="mini"
             type="text"
-            @click="getRoleDetailAPI(scope.row.id)"
+            @click="getRoleDetail(scope.row.id)"
           >编辑</el-button>
           <el-button size="mini" type="text" @click="hDelete(scope.row.id)">删除</el-button>
           <el-button size="mini" type="text" @click="resetPwd(scope.row.id)">重置密码</el-button>
@@ -42,12 +42,9 @@
     </el-table>
     <!-- // 新增员工弹窗 -->
     <add-employee
+      ref="addEmployee"
       :dialog-visible.sync="dialogVisible"
-      :options.sync="options"
-      :form.sync="form"
-      :form-rules.sync="formRules"
-      :h-add="hAdd"
-      :h-edit="hEdit"
+      @getUserList="getUserList"
     />
 
     <!-- //分页 -->
@@ -63,8 +60,8 @@
 </template>
 
 <script>
-import { getUserListAPI, getRoleListAPI } from '@/api/system'
-import { AddRoleAPI, RoleDetailAPI, EditRoleAPI, DeleteRoleAPI, resetPwdAPI } from '@/api/role'
+import { getUserListAPI } from '@/api/system'
+import { DeleteRoleAPI, resetPwdAPI } from '@/api/role'
 import AddEmployee from './component/add.vue'
 export default {
   name: 'EmployeeIndex',
@@ -79,37 +76,12 @@ export default {
       userList: [],
       total: 0,
       dialogVisible: false,
-      options: [],
-      form: {
-        phonenumber: '',
-        status: 1,
-        roleId: '',
-        userName: '',
-        name: '',
-        roleName: ''
-      },
-      formRules: {
-        phonenumber: [
-          { required: true, message: '请输入手机号', trigger: 'blur' },
-          {
-            pattern: /^1[34578]\d{9}$/,
-            message: '请输入正确的手机号',
-            trigger: 'blur'
-          }
-        ],
-        status: [{ required: true, message: '请选择状态', trigger: 'change' }],
-        roleId: [{ required: true, message: '请选择角色', trigger: 'change' }],
-        userName: [
-          { required: true, message: '请输入用户名', trigger: 'blur' }
-        ],
-        name: [{ required: true, message: '请输入登陆账号', trigger: 'blur' }],
-        password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
-      }
+      id: 0
+
     }
   },
   mounted() {
     this.getUserList()
-    this.getRoleList()
   },
 
   methods: {
@@ -145,35 +117,17 @@ export default {
     },
     hShow() {
       this.dialogVisible = true
+      console.log(this.dialogVisible)
+      this.$refs.addEmployee.title = '添加计费规则'
     },
-    async getRoleList() {
-      const res = await getRoleListAPI()
-      this.options = res.data
-    },
-    async hAdd() {
-      await AddRoleAPI(this.form)
-      this.getUserList()
-    },
-    async hEdit() {
-      await EditRoleAPI(this.form)
-      this.getUserList()
-    },
-    async getRoleDetailAPI(userid) {
-      const res = await RoleDetailAPI(userid)
-      console.log(res)
-      // 数据回填
-      const { phonenumber, status, roleId, userName, name, roleName, id } = res.data
-      this.form = {
-        phonenumber,
-        status,
-        roleId,
-        userName,
-        name,
-        roleName,
-        id
-      }
+    getRoleDetail(id) {
+      this.id = id
       this.dialogVisible = true
+      this.$refs.addEmployee.getRoleDetail(id)
+      this.$refs.addEmployee.title = '编辑计费规则'
+      console.log(this.dialogVisible)
     },
+
     async hDelete(id) {
       this.$confirm('是否确认删除该员工吗?', '提示', {
         confirmButtonText: '确定',
