@@ -14,4 +14,7 @@ router.beforeEach((to, from, next) => {
     }
   }
 })
+<<<<<<< HEAD
 
+=======
+>>>>>>> build

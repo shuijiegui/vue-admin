@@ -12,11 +12,6 @@ export const routes = [
     component: () => import('@/views/Login/index'),
     hidden: true
   },
-  // {
-  //   path: '/',
-  //   component: Layout,
-  //   redirect: '/workbench'
-  // },
   {
     path: '/',
     redirect: '/workbench',
@@ -49,7 +44,26 @@ export const routes = [
       }
     ]
   },
-
+  {
+    path: '/cardAdd',
+    component: () => import('@/views/Car/CarCard/addCard')
+  },
+  {
+    path: '/enterPriseAdd',
+    component: () => import('@/views/Park/Enterprise/add')
+  },
+  {
+    path: '/exterpriseDetail',
+    component: () => import('@/views/Park/Enterprise/Detail')
+  },
+  {
+    path: '/roleAdd',
+    component: () => import('@/views/System/Role/addRole')
+  },
+  {
+    path: '/detail',
+    component: () => import('@/views/Rod/RodWarn/detail')
+  },
   {
     path: '/parking',
     component: Layout,
@@ -68,6 +82,7 @@ export const routes = [
         component: () => import('@/views/Car/CarCard'),
         meta: { title: '月卡管理' }
       },
+
       {
         path: 'pay',
         permission: 'parking:payment',
