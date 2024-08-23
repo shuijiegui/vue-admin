@@ -14,6 +14,7 @@
     <!-- 表格区域 -->
     <div class="table">
       <el-table
+        v-loading="loading"
         style="width: 100%"
         :data="warnList"
       >
@@ -103,7 +104,8 @@ export default {
       },
       warnList: [],
       total: 0, // 总条数
-      status: ''
+      status: '',
+      loading: true
     }
   },
   mounted() {
@@ -112,9 +114,9 @@ export default {
   methods: {
     async getWarningList() {
       const res = await getPoleWarningListAPI(this.params)
-
       this.warnList = res.data.rows
       this.total = res.data.total
+      this.loading = false
     },
 
     getWaringListChange(page) {

@@ -10,7 +10,7 @@
       <div class="form-container">
         <div class="title">告警详情</div>
         <div class="form">
-          <el-form ref="carInfoForm" label-width="100px">
+          <el-form ref="carInfoForm" v-loading="loading" label-width="100px">
             <el-form-item label="告警时间：">{{ warnList.warningTime }}</el-form-item>
             <el-form-item label="一体杆名称：">{{ warnList.poleName }}</el-form-item>
             <el-form-item label="告警区域：">{{ warnList.areaName }}</el-form-item>
@@ -43,7 +43,8 @@ export default {
   data() {
     return {
       id: this.$route.query.id || '',
-      warnList: {}
+      warnList: {},
+      loading: true
     }
   },
   mounted() {
@@ -53,6 +54,7 @@ export default {
     async getPoleWarningDetail() {
       const res = await getPoleWarningDetailAPI(this.id)
       this.warnList = res.data
+      this.loading = false
     },
     warningType(status) {
       const warningMap = {
